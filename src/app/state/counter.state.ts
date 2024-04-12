@@ -1,8 +1,10 @@
 export interface CounterState {
-  counter : number
+  counter : number;
+  channelName :string;
 }
 
 export const initialState :CounterState = {
-  counter: 0,
+  counter: 4,
+  channelName : "Ngrx Channel "
 };
 

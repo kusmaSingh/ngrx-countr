@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { initialState } from './counter.state';
-import { decrement, increment, reset } from './counter.action';
+import { changeChannelName, customIncrement, decrement, increment, reset } from './counter.action';
 
 const _counterReducer = createReducer(
   initialState,
@@ -21,6 +21,18 @@ const _counterReducer = createReducer(
       ...state,
       counter: 0,
     };
+  }),
+  on(customIncrement, (state, action)=> {
+    console.log(action)
+    return {
+      ...state,
+      counter : state.counter + action.count
+    }
+  }), on(changeChannelName, (state)=> {
+return {
+...state,
+ channelName : 'Modified Kusma Dev'
+}
   })
 );
 

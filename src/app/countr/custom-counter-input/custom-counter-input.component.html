@@ -1,0 +1,9 @@
+<div>
+  <div class="my-3 channel">
+    {{channelName}}
+  </div>
+  <input class="form-control mb-3" type="number" placeholder="Enter Value" [(ngModel)] = "value" /> &nbsp;
+  <button class="btn btn-primary" (click)="onAdd()"> Add to Counter</button> &nbsp;
+  <button class="btn btn-primary" (click)="onChangeChannelName()"> Change Channel </button>
+
+</div>
