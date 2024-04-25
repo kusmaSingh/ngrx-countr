@@ -10,13 +10,23 @@ import { StoreModule } from '@ngrx/store';
 import { POST_STATE_NAME } from './state/post.action';
 
 const routes: Routes = [
-  { path: '', component: PostlistComponent, children :[
-  { path: 'add', component: AddPostComponent },
-  { path: 'edit/:id', component: EditPostComponent },
-]}]
+  {
+    path: '',
+    component: PostlistComponent,
+    children: [
+      { path: 'add', component: AddPostComponent },
+      { path: 'edit/:id', component: EditPostComponent },
+    ],
+  },
+];
 
 @NgModule({
-  imports: [CommonModule ,ReactiveFormsModule, RouterModule.forChild(routes), StoreModule.forFeature(POST_STATE_NAME, postsReducer)],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule.forChild(routes),
+    StoreModule.forFeature(POST_STATE_NAME, postsReducer),
+  ],
   declarations: [PostlistComponent, AddPostComponent, EditPostComponent],
 })
 export class PostsModule {}
