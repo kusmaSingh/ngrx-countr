@@ -9,18 +9,19 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HomeComponent } from './home/home.component';
 import { HeaderComponent } from './shared/header/header.component';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { PostlistComponent } from './post/postlist/postlist.component';
-import { appReducers } from './store/app.state';
-import { AddPostComponent } from './post/add-post/add-post.component';
-import { EditPostComponent } from './post/edit-post/edit-post.component';
+
 import { EffectsModule } from '@ngrx/effects';
 import { HttpClientModule } from '@angular/common/http';
+import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
+import { appReducers } from './store/app.state';
+import { AuthEffects } from './auth/state/auth.effects';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    HeaderComponent
+    HeaderComponent,
+    LoadingSpinnerComponent
   ],
   imports: [
     BrowserModule,
@@ -28,8 +29,9 @@ import { HttpClientModule } from '@angular/common/http';
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
-    EffectsModule.forRoot([]),
-    StoreModule.forRoot({}),
+    FormsModule,
+    EffectsModule.forRoot([AuthEffects]),
+    StoreModule.forRoot(appReducers),
     StoreDevtoolsModule.instrument({  logOnly: !isDevMode() }),
   ],
   providers: [],
