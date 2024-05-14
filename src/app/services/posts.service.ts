@@ -1,3 +1,4 @@
+import { getPostById } from './../post/state/posts.selector';
 import { updatePost } from './../post/state/post.action';
 import { Observable, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -42,4 +43,9 @@ export class PostSService {
     `https://ngrx-counter-6b5b3-default-rtdb.firebaseio.com/posts/${id}.json`,
   )
   }
+  getPostById (id:string): Observable<any> {
+    return this.http.get<any>(
+      `https://ngrx-counter-6b5b3-default-rtdb.firebaseio.com/posts/${id}.json`,
+    )
+    }
 }

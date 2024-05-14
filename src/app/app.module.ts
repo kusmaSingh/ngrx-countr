@@ -18,13 +18,15 @@ import { appReducers } from './store/app.state';
 import { AuthEffects } from './auth/state/auth.effects';
 import { AuthTokenInterceptor } from './services/AuthToken.interception';
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
+import { PostDetailsComponent } from './post/post-details/post-details.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     HeaderComponent,
-    LoadingSpinnerComponent
+    LoadingSpinnerComponent,
+    PostDetailsComponent
   ],
   imports: [
     BrowserModule,

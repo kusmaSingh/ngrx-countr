@@ -1,5 +1,5 @@
 import { Store } from '@ngrx/store';
-import { Actions, act, createEffect, ofType } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
   addPost,
   addPostSuccess,
@@ -10,12 +10,13 @@ import {
   updatePost,
   updatePostSuccess,
 } from './post.action';
-import { exhaustMap, map, mergeMap, switchMap, tap } from 'rxjs';
+import { filter, map, mergeMap, switchMap, tap } from 'rxjs';
 import { PostSService } from '../../services/posts.service';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { setLoadingSpinner } from '../../store/shared/shared.actions';
 import { AppState } from '../../store/app.state';
+import { ROUTER_NAVIGATION, RouterNavigationAction } from '@ngrx/router-store';
 
 @Injectable()
 export class PostsEffect {
@@ -23,7 +24,7 @@ export class PostsEffect {
     private action$: Actions,
     private postsService: PostSService,
     private router: Router,
-    private store :Store<AppState>,
+    private store: Store<AppState>
   ) {}
 
   loadPosts$ = createEffect(() => {
@@ -45,11 +46,8 @@ export class PostsEffect {
       mergeMap((action) => {
         return this.postsService.addPost(action.post).pipe(
           map((data) => {
-            debugger;
             this.store.dispatch(setLoadingSpinner({ status: false }));
             const post = { ...action.post, id: data.name };
-            // this.router.navigate(['/posts']);
-            // this.store
             return addPostSuccess({ post, redirect: true });
           })
         );
@@ -83,17 +81,38 @@ export class PostsEffect {
     );
   });
 
-  postRedirected$ = createEffect(() => {
-    debugger;
+  postRedirected$ = createEffect(
+    () => {
+      debugger;
+      return this.action$.pipe(
+        ofType(...[addPostSuccess, updatePostSuccess]),
+        tap((action) => {
+          if (action.redirect) {
+            this.router.navigate(['/posts']);
+          }
+        })
+      );
+    },
+    { dispatch: false }
+  );
+
+  getPostDetailsById$ = createEffect(() => {
     return this.action$.pipe(
-      ofType(...[addPostSuccess, updatePostSuccess]),
-      tap((action) => {
-        if (action.redirect) {
-          this.router.navigate(['/posts']);
-        }
+      ofType(ROUTER_NAVIGATION),
+      filter((r: RouterNavigationAction) => {
+        return r.payload.routerState.url.startsWith('/posts/details');
+      }),
+      map((r: RouterNavigationAction) => {
+        return r.payload.routerState['params']['id'];
+      }),
+      switchMap((id) => {
+        return this.postsService.getPostById(id).pipe(
+          map((post) => {
+            const postData = [{ ...post, id }];
+            return loadPostsSuccess({ posts: postData });
+          })
+        );
       })
     );
-  },
-  { dispatch: false }
-);
+  });
 }
