@@ -8,13 +8,13 @@ const _authReducer = createReducer(
   on(loginSuccess, (state, action) => {
     return {
       ...state,
-      user: action.user,
+      user: action.user
     };
   }),
   on(signupSuccess, (state, action) => {
     return {
       ...state,
-      user: action.user,
+      user: action.user
     };
   }),
   on(autoLogout, (state) => {

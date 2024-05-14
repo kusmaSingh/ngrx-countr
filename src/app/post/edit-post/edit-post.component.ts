@@ -5,7 +5,7 @@ import { Post } from '../../model/post';
 import { AppState } from '../../store/app.state';
 import { Store } from '@ngrx/store';
 import { getPostById } from '../state/posts.selector';
-import {  Subscription } from 'rxjs';
+import { Subscription, take } from 'rxjs';
 import { updatePost } from '../state/post.action';
 
 @Component({
@@ -17,31 +17,30 @@ export class EditPostComponent implements OnInit, OnDestroy {
   postForm: FormGroup;
   post: Post;
   postFormSubscription: Subscription;
-  constructor(
-    private activateRoute: ActivatedRoute,
-    private store: Store<AppState>,
-    private router : Router
-  ) {
-    this.activateRoute.paramMap.subscribe((route) => {
-      const id = route['params'].id;
-      this.postFormSubscription = this.store
-        .select(getPostById, { id })
-        .subscribe((postData) => {
-          this.post = postData;
-          this.createForm();
-        });
-    });
+  constructor(private store: Store<AppState>) {
+    this.createForm();
+    this.postFormSubscription = this.store
+      .select(getPostById)
+      .subscribe((post) => {
+        if (post) {
+          this.post = post;
+          this.postForm.patchValue({
+            title: post.title,
+            description: post.description,
+          });
+        }
+      });
   }
 
   ngOnInit() {}
 
   createForm() {
     this.postForm = new FormGroup({
-      title: new FormControl(this.post.title, [
+      title: new FormControl(null, [
         Validators.required,
         Validators.minLength(8),
       ]),
-      description: new FormControl(this.post.description, [
+      description: new FormControl(null, [
         Validators.required,
         Validators.minLength(10),
       ]),
@@ -49,20 +48,19 @@ export class EditPostComponent implements OnInit, OnDestroy {
   }
 
   onUpdatePost() {
-    if( this.postForm.invalid){
-      return ;
+    if (this.postForm.invalid) {
+      return;
     }
     const title = this.postForm.value.title;
-    const  description = this.postForm.value.description
-    const post :Post = {
-      id : this.post.id,
+    const description = this.postForm.value.description;
+    const post: Post = {
+      id: this.post.id,
       title,
-      description
-    }
+      description,
+    };
 
-    this.store.dispatch(updatePost({post}))
-    this.router.navigate(['posts'])
-
+    this.store.dispatch(updatePost({ post }));
+    //this.router.navigate(['posts']);
   }
 
   showDescriptionError() {

@@ -3,10 +3,11 @@ import { initialState } from "./post.state"
 import { addPostSuccess, deletePostSuccess, loadPostsSuccess, updatePost, updatePostSuccess } from "./post.action";
 
 const _postsReducer = createReducer(initialState,
-   on(addPostSuccess, (state, action)=> {
+   on(addPostSuccess, (state, action)=> { debugger
     let post  = {...action.post};
         return {
-          state , posts: [...state.posts, post]
+          ...state ,
+           posts: [...state.posts, post]
 
         }
    }),

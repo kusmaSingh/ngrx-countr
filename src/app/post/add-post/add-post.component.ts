@@ -4,6 +4,7 @@ import { addPost } from '../state/post.action';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { Post } from '../../model/post';
+import { setLoadingSpinner } from '../../store/shared/shared.actions';
 
 @Component({
   selector: 'app-add-post',
@@ -37,8 +38,9 @@ export class AddPostComponent implements OnInit {
       title,
       description
     }
+    this.store.dispatch(setLoadingSpinner({status:true}))
     this.store.dispatch(addPost({post}))
-    this.router.navigate(['posts'])
+   // this.router.navigate(['posts'])
   }
 
   showDescriptionError(){

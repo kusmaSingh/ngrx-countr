@@ -5,6 +5,7 @@ import { AuthGuard } from './services/auth.gaurd';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
+
   {
     path: 'counter',
     loadChildren: () =>
